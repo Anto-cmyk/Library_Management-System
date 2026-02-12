@@ -1,7 +1,7 @@
 <?php
 session_start();
 
- if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
+ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'librarian') {
     header("Location: ../index.php");
     exit();
 }
@@ -10,17 +10,17 @@ $page = $_GET['page'] ?? 'librarian_dashboard';
 
 // Allowed librarian pages
 $allowed_pages = [
-    'home',
-    'browse_books',
-    'profile',
+    'dashboard',
+    'manage_books',
+    'add_book',
     'manage_users',
-    'books',
-    'settings'
+    'downloads',
+    'report'
 ];
 
 
 if (!in_array($page, $allowed_pages)) {
-    $page = 'home';
+    $page = 'dashboard';
 }
 ?>
 
@@ -32,14 +32,12 @@ if (!in_array($page, $allowed_pages)) {
 </head>
 
 <body class="bg-gray-900 text-white flex">
- 
 
 <!-- Sidebar -->
 <?php include 'sidebar.php'; ?>
- 
+
 <!-- Main Content -->
 <div class="flex-1 p-6">
-    <?php include 'header.php'; ?>
 
 <?php include "$page.php"; ?>
 

@@ -5,7 +5,7 @@
 </h2>
 
 <div class="text-sm text-gray-300">
-Welcome, <!-- <?php echo $_SESSION['name']; ?> --> User
+Welcome, <?php echo $_SESSION['full_name']; ?>
 </div>
 
 </div>

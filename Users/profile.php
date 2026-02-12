@@ -1,9 +1,18 @@
-<div class="bg-gray-800 p-6 rounded-xl max-w-lg">
+<?php
+include "../db.php";
 
-<h3 class="text-xl font-semibold mb-4">Profile Information</h3>
+$email = $_SESSION['email'];
 
-<p><span class="text-gray-400">Name:</span> <?php echo /*$_SESSION['name']; */ "anto";?></p>
-<p><span class="text-gray-400">School:</span> <?php echo /*$_SESSION['school'];*/"mut"; ?></p>
-<p><span class="text-gray-400">Role:</span> User</p>
+$stmt = $conn->prepare("SELECT full_name, email, school_id FROM users WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+?>
 
+<h2 class="text-2xl font-semibold mb-6">Profile</h2>
+
+<div class="bg-gray-800 p-5 rounded-lg space-y-2">
+<p><strong>Name:</strong> <?= htmlspecialchars($user['full_name']) ?></p>
+<p><strong>Email:</strong> <?= htmlspecialchars($user['email']) ?></p>
+<p><strong>School Code:</strong> <?= htmlspecialchars($user['school_id']) ?></p>
 </div>

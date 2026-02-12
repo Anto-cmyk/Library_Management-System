@@ -1,3 +1,39 @@
+<?php
+ session_start();
+
+ include "db.php"; 
+
+ $message =  '';
+
+ if($_SERVER['REQUEST_METHOD'] === 'POST') 
+   { $email = $_POST['email']; 
+   $password = $_POST['password'];
+   
+   $stmt = $conn->prepare("SELECT id, full_name, password, role FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email); $stmt->execute(); 
+    $result = $stmt->get_result(); 
+    
+    if ($result->num_rows === 1) 
+      { $user = $result->fetch_assoc();
+      
+       if (password_verify($password, $user['password'])) 
+         { $_SESSION['user_id'] = $user['id']; 
+          $_SESSION['full_name'] = $user['full_name']; 
+          $_SESSION['role'] = $user['role']; 
+          $_SESSION['email'] = $email;
+          
+           if ($user['role'] === 'librarian') 
+             { header("Location: Librarian/routes.php"); exit(); }
+             
+              else { header("Location: Users/routes.php"); exit(); } } 
+               else { $message = "Invalid email or password"; } } 
+               else { $message =  "Invalid email or password"; } } ?>
+ 
+ 
+ 
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +58,9 @@ Invalid email or password
 </div>
 -->
 
-<form action="process_login.php" method="POST" class="space-y-4">
+<form action="index.php" method="POST" class="space-y-4">
+
+<?php echo " <p class='block text-red-700'>$message</p>"; ?>
 
 <input type="email" name="email" placeholder="Email"
 class="w-full p-3 rounded-lg bg-gray-800 border border-gray-600 focus:border-blue-500 focus:outline-none"
